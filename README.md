@@ -37,7 +37,7 @@ We're aiming to create a automated system that makes applying for jobs a breeze.
 ### 2.1. Prerequisites
  - OS : Linux, Mac
  - Python : 3.11.6 and above
- - LLM API key: [OpenAI](https://platform.openai.com/account/api-keys) OR [Gemini Pro](https://ai.google.dev/)
+ - LLM API key: [OpenAI](https://platform.openai.com/account/api-keys), [Gemini Pro](https://ai.google.dev/), or [OpenRouter](https://openrouter.ai/keys) (includes free models)
 
 ### 2.2. Package Installation - Use as Library
 
@@ -51,13 +51,14 @@ pip install zlm
 from zlm import AutoApplyModel
 
 job_llm = AutoApplyModel(
-    api_key="PROVIDE_API_KEY", 
-    provider="ENTER PROVIDER <gemini> or <openai>",
+    api_key="PROVIDE_API_KEY",
+    provider="ENTER PROVIDER <gemini>, <openai>, or <openrouter>",
+    model="MODEL_NAME", # Optional: specific model like "qwen/qwen3-30b-a3b:free" for OpenRouter free model
     downloads_dir="[optional] ENTER FOLDER PATH WHERE FILE GET DOWNLOADED, By default, 'downloads' folder"
 )
 
 job_llm.resume_cv_pipeline(
-    "ENTER_JOB_URL", 
+    "ENTER_JOB_URL",
     "YOUR_MASTER_RESUME_DATA" # .pdf or .json
 ) # Return and downloads curated resume and cover letter.
 ```
@@ -105,7 +106,7 @@ cd job-llm
     --master_data="JSON_USER_MASTER_DATA" /
     --api_key="YOUR_LLM_PROVIDER_API_KEY" / # put api_key considering provider
     --downloads_dir="DOWNLOAD_LOCATION_FOR_RESUME_CV" /
-    --provider="openai" # openai, gemini
+    --provider="openai" # openai, gemini, openrouter
 ```
 
 ## 3. Citations
