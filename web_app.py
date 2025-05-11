@@ -56,7 +56,7 @@ def encode_tex_file(file_path):
         encoded_zip = base64.b64encode(zip_content).decode('utf-8')
 
         return encoded_zip
-    
+
     except Exception as e:
         st.error(f"An error occurred while encoding the file: {e}")
         print(e)
@@ -111,7 +111,7 @@ try:
 
     col_1, col_2, col_3 = st.columns(3)
     with col_1:
-        provider = st.selectbox("Select provider([OpenAI](https://openai.com/blog/openai-api), [Gemini Pro](https://ai.google.dev/)):", LLM_MAPPING.keys())
+        provider = st.selectbox("Select provider([OpenAI](https://openai.com/blog/openai-api), [Gemini Pro](https://ai.google.dev/), [OpenRouter](https://openrouter.ai/)):", LLM_MAPPING.keys())
     with col_2:
         model = st.selectbox("Select model:", LLM_MAPPING[provider]['model'])
     with col_3:
@@ -119,7 +119,17 @@ try:
             api_key = st.text_input("Enter API key:", type="password", value="")
         else:
             api_key = None
-    st.markdown("<sub><sup>💡 GPT-4 is recommended for better results.</sup></sub>", unsafe_allow_html=True)
+    if provider == "OpenRouter":
+        st.markdown("<sub><sup>💡 OpenRouter provides several free models (look for models with ':free' suffix):</sup></sub>", unsafe_allow_html=True)
+        st.markdown("<sub><sup>• Google Gemma 3 27B (free) - Google's model for text generation</sup></sub>", unsafe_allow_html=True)
+        st.markdown("<sub><sup>• Qwen3 30B A3B (free) - High quality general purpose model</sup></sub>", unsafe_allow_html=True)
+        st.markdown("<sub><sup>• DeepSeek V3 (free) - Powerful 685B parameter model</sup></sub>", unsafe_allow_html=True)
+        st.markdown("<sub><sup>• Yi 1.5 34B (free) - Strong general purpose model</sup></sub>", unsafe_allow_html=True)
+        st.markdown("<sub><sup>• Other free models: Qwen3 8B, Mistral 7B, Phi-3 Mini</sup></sub>", unsafe_allow_html=True)
+        st.markdown("<sub><sup>• For best resume results, try Google Gemma 3 or Qwen3 30B</sup></sub>", unsafe_allow_html=True)
+        st.markdown("<sub><sup>[Get your free OpenRouter API key here](https://openrouter.ai/keys)</sup></sub>", unsafe_allow_html=True)
+    else:
+        st.markdown("<sub><sup>💡 GPT-4 is recommended for better results.</sup></sub>", unsafe_allow_html=True)
 
     # Buttons side-by-side with styling
     col1, col2, col3 = st.columns(3)
