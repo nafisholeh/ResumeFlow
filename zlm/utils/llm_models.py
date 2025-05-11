@@ -120,6 +120,53 @@ class Gemini:
         except Exception as e:
             print(e)
 
+class OpenRouter:
+    def __init__(self, api_key, model, system_prompt):
+        if system_prompt.strip():
+            self.system_prompt = {"role": "system", "content": system_prompt}
+        self.client = OpenAI(
+            api_key=api_key,
+            base_url="https://openrouter.ai/api/v1",
+            default_headers={
+                "HTTP-Referer": "https://github.com/Ztrimus/job-llm",
+                "X-Title": "ResumeFlow"
+            }
+        )
+        self.model = model
+
+    def get_response(self, prompt, expecting_longer_output=False, need_json_output=False):
+        user_prompt = {"role": "user", "content": prompt}
+
+        try:
+            completion = self.client.chat.completions.create(
+                model=self.model,
+                messages=[self.system_prompt, user_prompt],
+                temperature=0.7,
+                max_tokens=4000 if expecting_longer_output else None,
+                response_format={"type": "json_object"} if need_json_output else None
+            )
+
+            response = completion.choices[0].message
+            content = response.content.strip()
+
+            if need_json_output:
+                return parse_json_markdown(content)
+            else:
+                return content
+
+        except Exception as e:
+            print(e)
+            st.error(f"Error in OpenRouter API, {e}")
+            st.markdown("<h3 style='text-align: center;'>Please try again! Check the log in the dropdown for more details.</h3>", unsafe_allow_html=True)
+            return None
+
+    def get_embedding(self, text, model=GPT_EMBEDDING_MODEL, task_type="retrieval_document"):
+        try:
+            text = text.replace("\n", " ")
+            return self.client.embeddings.create(input=[text], model=model).data[0].embedding
+        except Exception as e:
+            print(e)
+
 class OllamaModel:
     def __init__(self, model, system_prompt):
         self.model = model
