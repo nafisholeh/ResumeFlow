@@ -19,9 +19,50 @@ from zlm.utils.utils import display_pdf, download_pdf, read_file, read_json
 from zlm.utils.metrics import jaccard_similarity, overlap_coefficient, cosine_similarity
 from zlm.variables import LLM_MAPPING
 
-print("Installing playwright...")
+# Install Playwright browser
+print("Installing Playwright browser...")
 os.system("playwright install")
-os.system("sudo playwright install-deps")
+
+# Check if dependencies are already installed
+import subprocess
+import sys
+
+def check_playwright_deps():
+    try:
+        # Try a simple Playwright operation that would fail if deps are missing
+        result = subprocess.run(
+            ["playwright", "install", "--help"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            timeout=5
+        )
+        return result.returncode == 0
+    except Exception:
+        return False
+
+# Only try to install dependencies if they're not already installed
+if not check_playwright_deps():
+    print("\n⚠️ Playwright dependencies may be missing.")
+    print("You have two options:")
+    print("1. Run this command manually in your terminal: 'playwright install-deps'")
+    print("2. Run the app with sudo: 'sudo streamlit run web_app.py'")
+    print("Note: Option 1 is recommended for security reasons.\n")
+
+    # Try non-sudo installation first
+    try:
+        print("Attempting to install Playwright dependencies without sudo...")
+        result = subprocess.run(
+            ["playwright", "install-deps"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            timeout=30
+        )
+        if result.returncode == 0:
+            print("✅ Playwright dependencies installed successfully!")
+        else:
+            print("❌ Could not install dependencies without sudo.")
+    except Exception as e:
+        print(f"Error during installation: {e}")
 
 st.set_page_config(
     page_title="Resume Generator",
