@@ -179,7 +179,7 @@ def display_pdf(file, type="pdf"):
         # Store Pdf with convert_from_path function
         pages = convert_from_path(file)
         for page in pages:
-            st.image(page, use_column_width=True)
+            st.image(page, use_container_width=True)
 
     if type == "pdf":
         # Read file as bytes:
@@ -193,7 +193,7 @@ def display_pdf(file, type="pdf"):
 
         # Iframe Embedding of PDF in HTML
         pdf_display = F'<iframe src="data:application/pdf;base64,{base64_pdf}" type="application/pdf" style="width:100%; height:100vh;"></iframe>'
-        
+
         # # Embedding PDF in HTML
         # pdf_display =  f"""<embed
         # class="pdfobject"
@@ -264,13 +264,13 @@ def parse_json_markdown(json_string: str) -> dict:
         # Try to find JSON string within first and last triple backticks
         if json_string[3:13].lower() == "typescript":
             json_string = json_string.replace(json_string[3:13], "",1)
-        
+
         if 'JSON_OUTPUT_ACCORDING_TO_RESUME_DATA_SCHEMA' in json_string:
             json_string = json_string.replace("JSON_OUTPUT_ACCORDING_TO_RESUME_DATA_SCHEMA", "",1)
-        
+
         if json_string[3:7].lower() == "json":
             json_string = json_string.replace(json_string[3:7], "",1)
-    
+
         parser = JsonOutputParser()
         parsed = parser.parse(json_string)
 
@@ -305,7 +305,7 @@ def key_value_chunking(data, prefix=""):
     """
     chunks = []
     stop_needed = lambda value: '.' if not isinstance(value, (str, int, float, bool, list)) else ''
-    
+
     if isinstance(data, dict):
         for key, value in data.items():
             if value is not None:
@@ -317,5 +317,5 @@ def key_value_chunking(data, prefix=""):
     else:
         if data is not None:
             chunks.append(f"{prefix}: {data}")
-    
+
     return chunks
